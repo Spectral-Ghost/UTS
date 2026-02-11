@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Utin</title>
+    <title>Utin - Portfolio</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+
         body {
             margin: 0;
             padding: 0;
             overflow: hidden;
             background-color: black;
-            font-family: monospace;
-            border: 10px solid black;
+            font-family: 'Fira Code', monospace;
             box-sizing: border-box;
             height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            image-rendering: pixelated;
         }
+
         #game-container {
             position: relative;
             width: 100%;
@@ -28,20 +28,15 @@
             background-position: center;
             background-repeat: no-repeat;
         }
+
         #world {
             position: absolute;
             bottom: 0;
             left: 0;
             height: 100%;
+            will-change: transform;
         }
-        #ground {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            background-color: transparent;
-            border-top: none;
-            z-index: 10;
-        }
+
         #player {
             position: absolute;
             background-color: #3b82f6;
@@ -49,52 +44,165 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 10px;
+            font-size: 8px;
             font-weight: bold;
             z-index: 20;
+            border: 2px solid rgba(255,255,255,0.5);
+            box-shadow: 4px 4px 0 0 rgba(0,0,0,0.5);
         }
+
         .npc {
             position: absolute;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
             cursor: pointer;
             z-index: 15;
+            transition: transform 0.2s;
         }
+
+        .npc:hover {
+            transform: translateY(-4px);
+        }
+
         .npc-name {
             position: absolute;
             color: white;
-            font-size: 12px;
-            font-weight: bold;
+            font-size: 8px;
             text-align: center;
             z-index: 16;
+            background: rgba(0,0,0,0.8);
+            padding: 2px 6px;
+            border: 1px solid rgba(255,255,255,0.2);
+            white-space: nowrap;
+            text-transform: uppercase;
         }
+
+        /* Top Menu - Pixel Theme */
+        #top-menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: rgba(0,0,0,0.8);
+            border-bottom: 4px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 100;
+            color: white;
+        }
+
+        .menu-title {
+            color: #fbbf24;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .menu-links {
+            display: flex;
+            gap: 15px;
+            font-size: 10px;
+        }
+
+        .menu-links span {
+            cursor: pointer;
+        }
+
+        .menu-links span:hover {
+            color: #fbbf24;
+        }
+
+        /* NPC Portfolio Menu */
         .menu {
             position: absolute;
-            width: 300px;
-            height: 200px;
-            background-color: #333;
+            width: 180px;
+            padding: 10px;
+            background-color: rgba(0,0,0,0.9);
+            border: 2px solid rgba(255,255,255,0.2);
             color: white;
+            z-index: 30;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .menu h3 {
+            margin: 0;
+            font-size: 10px;
+            color: #fbbf24;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 4px;
+        }
+
+        .menu p {
+            margin: 0;
+            font-size: 8px;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .menu-close {
+            font-size: 8px;
+            color: #f87171;
+            cursor: pointer;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        /* Mini Guide */
+        #guide {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.6);
+            border: 2px solid rgba(255,255,255,0.1);
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .wasd-grid {
+            display: grid;
+            grid-template-areas: ". w ." "a s d";
+            gap: 2px;
+        }
+
+        .key {
+            width: 18px;
+            height: 18px;
+            border: 1px solid rgba(255,255,255,0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            z-index: 30;
-            display: none;
+            font-size: 8px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .guide-text {
+            font-size: 8px;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
     <div id="game-container">
+        <nav id="top-menu">
+            <div class="menu-title">GUILD HALL</div>
+            <div class="menu-links">
+                <span>HEROES</span>
+                <span>QUESTS</span>
+                <span>MAP</span>
+            </div>
+        </nav>
+
         <div id="world">
-            <div id="ground"></div>
-            <div id="player"></div>
+            <div id="player">YOU</div>
 
             <div class="npc" id="npc1"></div>
             <div class="npc" id="npc2"></div>
@@ -110,19 +218,52 @@
             <div class="npc-name" id="name5">Kurt</div>
             <div class="npc-name" id="name6">Will</div>
 
-            <div class="menu" id="menu1">Portfolio 1</div>
-            <div class="menu" id="menu2">Portfolio 2</div>
-            <div class="menu" id="menu3">Portfolio 3</div>
-            <div class="menu" id="menu4">Portfolio 4</div>
-            <div class="menu" id="menu5">Portfolio 5</div>
-            <div class="menu" id="menu6">Portfolio 6</div>
+            <div class="menu" id="menu1">
+                <h3>Antoine</h3>
+                <p>Portfolio empty...</p>
+                <div class="menu-close" onclick="closeMenu(1)">[CLOSE]</div>
+            </div>
+            <div class="menu" id="menu2">
+                <h3>Daniel</h3>
+                <p>Portfolio empty...</p>
+                <div class="menu-close" onclick="closeMenu(2)">[CLOSE]</div>
+            </div>
+            <div class="menu" id="menu3">
+                <h3>Justine</h3>
+                <p>Portfolio empty...</p>
+                <div class="menu-close" onclick="closeMenu(3)">[CLOSE]</div>
+            </div>
+            <div class="menu" id="menu4">
+                <h3>Kris Karl</h3>
+                <p>Portfolio empty...</p>
+                <div class="menu-close" onclick="closeMenu(4)">[CLOSE]</div>
+            </div>
+            <div class="menu" id="menu5">
+                <h3>Kurt</h3>
+                <p>Portfolio empty...</p>
+                <div class="menu-close" onclick="closeMenu(5)">[CLOSE]</div>
+            </div>
+            <div class="menu" id="menu6">
+                <h3>Will</h3>
+                <p>Portfolio empty...</p>
+                <div class="menu-close" onclick="closeMenu(6)">[CLOSE]</div>
+            </div>
+        </div>
+
+        <div id="guide">
+            <div class="wasd-grid">
+                <div class="key" style="grid-area: w">W</div>
+                <div class="key" style="grid-area: a">A</div>
+                <div class="key" style="grid-area: s">S</div>
+                <div class="key" style="grid-area: d">D</div>
+            </div>
+            <div class="guide-text">MOVE</div>
         </div>
     </div>
 
     <script>
         const WORLD_WIDTH = 1800;      
         const GROUND_HEIGHT = 380;   
-        const GROUND_WIDTH = WORLD_WIDTH; 
         const PLAYER_WIDTH = 60;       
         const PLAYER_HEIGHT = 80;     
         const PLAYER_SPEED = 9;     
@@ -137,7 +278,6 @@
             {x: 1400, y: 50},
             {x: 1650, y: 50}
         ];
-        const npcNames = ["name1","name2","name3","name4","name5","name6"];
 
         const npcImages = [
             "image/Antoine.png",
@@ -149,17 +289,13 @@
         ];
 
         const worldEl = document.getElementById('world');
-        const groundEl = document.getElementById('ground');
         const playerEl = document.getElementById('player');
 
         worldEl.style.width = WORLD_WIDTH + 'px';
-        groundEl.style.width = GROUND_WIDTH + 'px';
-        groundEl.style.height = GROUND_HEIGHT + 'px';
         playerEl.style.width = PLAYER_WIDTH + 'px';
         playerEl.style.height = PLAYER_HEIGHT + 'px';
 
         const npcs = [];
-        const names = [];
         for (let i = 1; i <= 6; i++) {
             const npc = document.getElementById('npc' + i);
             npc.style.width = NPC_WIDTH + 'px';
@@ -169,25 +305,21 @@
             npc.style.backgroundImage = `url(${npcImages[i-1]})`;
             npcs.push(npc);
 
-            const nameEl = document.getElementById(npcNames[i-1]);
+            const nameEl = document.getElementById('name' + i);
             nameEl.style.left = npcPositions[i-1].x + 'px';
-            nameEl.style.bottom = (npcPositions[i-1].y + NPC_HEIGHT + 5) + 'px';
-            names.push(nameEl);
-        }
+            nameEl.style.bottom = (npcPositions[i-1].y + NPC_HEIGHT + 10) + 'px';
 
-        const menus = [];
-        for (let i = 1; i <= 6; i++) {
-            const menu = document.getElementById('menu' + i);
-            menus.push(menu);
-
-            npcs[i-1].addEventListener('click', () => {
-                menus.forEach(m => m.style.display = 'none');
-
-                menu.style.left = (npcPositions[i-1].x + NPC_WIDTH + 10) + 'px';
+            npc.addEventListener('click', () => {
+                document.querySelectorAll('.menu').forEach(m => m.style.display = 'none');
+                const menu = document.getElementById('menu' + i);
+                menu.style.left = (npcPositions[i-1].x + NPC_WIDTH + 15) + 'px';
                 menu.style.bottom = npcPositions[i-1].y + 'px';
-
                 menu.style.display = 'flex';
             });
+        }
+
+        function closeMenu(id) {
+            document.getElementById('menu' + id).style.display = 'none';
         }
 
         let playerX = 200;
@@ -195,18 +327,18 @@
         let cameraX = 0;
         const keys = {};
 
-        window.addEventListener('keydown', (e) => keys[e.key] = true);
-        window.addEventListener('keyup', (e) => keys[e.key] = false);
+        window.addEventListener('keydown', (e) => keys[e.key.toLowerCase()] = true);
+        window.addEventListener('keyup', (e) => keys[e.key.toLowerCase()] = false);
 
         function gameLoop() {
             const screenWidth = window.innerWidth;
 
-            if (keys['ArrowLeft'] || keys['a']) playerX -= PLAYER_SPEED;
-            if (keys['ArrowRight'] || keys['d']) playerX += PLAYER_SPEED;
-            if (keys['ArrowUp'] || keys['w']) playerY += PLAYER_SPEED;
-            if (keys['ArrowDown'] || keys['s']) playerY -= PLAYER_SPEED;
+            if (keys['a'] || keys['arrowleft']) playerX -= PLAYER_SPEED;
+            if (keys['d'] || keys['arrowright']) playerX += PLAYER_SPEED;
+            if (keys['w'] || keys['arrowup']) playerY += PLAYER_SPEED;
+            if (keys['s'] || keys['arrowdown']) playerY -= PLAYER_SPEED;
 
-            playerX = Math.max(cameraX, Math.min(playerX, cameraX + screenWidth - PLAYER_WIDTH));
+            playerX = Math.max(0, Math.min(playerX, WORLD_WIDTH - PLAYER_WIDTH));
             playerY = Math.max(0, Math.min(playerY, GROUND_HEIGHT - 5));
 
             playerEl.style.left = playerX + 'px';
