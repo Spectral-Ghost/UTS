@@ -55,7 +55,9 @@
         }
         .npc {
             position: absolute;
-            background-color: red;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -118,7 +120,6 @@
     </div>
 
     <script>
-        // variables
         const WORLD_WIDTH = 1800;      
         const GROUND_HEIGHT = 380;   
         const GROUND_WIDTH = WORLD_WIDTH; 
@@ -138,6 +139,15 @@
         ];
         const npcNames = ["name1","name2","name3","name4","name5","name6"];
 
+        const npcImages = [
+            "image/antoine.png",
+            "image/daniel.png",
+            "image/justine.png",
+            "image/kriskarl.png",
+            "image/kurt.png",
+            "image/will.png"
+        ];
+
         const worldEl = document.getElementById('world');
         const groundEl = document.getElementById('ground');
         const playerEl = document.getElementById('player');
@@ -156,6 +166,7 @@
             npc.style.height = NPC_HEIGHT + 'px';
             npc.style.left = npcPositions[i-1].x + 'px';
             npc.style.bottom = npcPositions[i-1].y + 'px';
+            npc.style.backgroundImage = `url(${npcImages[i-1]})`;
             npcs.push(npc);
 
             const nameEl = document.getElementById(npcNames[i-1]);
