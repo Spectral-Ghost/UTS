@@ -1,0 +1,29 @@
+<script>
+  const npcData = [
+    {id: 1, x: 400, name: "Antoine", img: "image/Antoine.png", file: "antoine.html"},
+    {id: 2, x: 650, name: "Daniel", img: "image/daniel.png", file: "daniel.html"},
+    {id: 3, x: 900, name: "Justine", img: "image/Justine.png", file: "justine.html"},
+    {id: 4, x: 1150, name: "Kris Karl", img: "image/kriskarl.png", file: "karl.html"},
+    {id: 5, x: 1400, name: "Kurt", img: "image/Kurt.png", file: "kurt.html"},
+    {id: 6, x: 1650, name: "Will", img: "image/will.png", file: "will.html"}
+  ];
+
+  npcData.forEach(npc => {
+    const el = document.createElement('div');
+    el.className = 'npc';
+    el.style.width = PLAYER_WIDTH + 'px';
+    el.style.height = PLAYER_HEIGHT + 'px';
+    el.style.left = npc.x + 'px';
+    el.style.bottom = '50px';
+    el.style.backgroundImage = `url(${npc.img})`;
+    el.onclick = () => openPortfolio(npc.file);
+    worldEl.appendChild(el);
+
+    const nameEl = document.createElement('div');
+    nameEl.className = 'npc-name';
+    nameEl.innerText = npc.name;
+    nameEl.style.left = npc.x + 'px';
+    nameEl.style.bottom = (50 + PLAYER_HEIGHT + 10) + 'px';
+    worldEl.appendChild(nameEl);
+  });
+</script>
