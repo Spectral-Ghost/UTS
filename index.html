@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -195,6 +196,8 @@
         <div class="menu-close" onclick="closeMenu()">[CLOSE]</div>
       </div>
     </div>
+
+    <div id="guide-slot"></div>
   </div>
 
   <script>
@@ -257,8 +260,9 @@
       executeScriptsWithin(worldEl);
     }
 
-    injectHtmlIntoSlot('menu-slot', '/public/components/menu.html');
-    injectNpcPack('/public/components/npc.html');
+    injectHtmlIntoSlot('menu-slot', 'menu-and-guide.html');
+    injectHtmlIntoSlot('guide-slot', 'guide.html');
+    injectNpcPack('npcs.html');
 
     async function openPortfolio(file) {
       modalContainer.style.display = 'flex';
