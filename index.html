@@ -23,10 +23,6 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-image: url("image/Battleground2.png");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
         }
 
         #world {
@@ -35,6 +31,20 @@
             left: 0;
             height: 100%;
             will-change: transform;
+        }
+
+        /* Background now moves WITH the world */
+        #background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("image/Battleground2.png");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 0;
         }
 
         #player {
@@ -115,39 +125,68 @@
             color: #fbbf24;
         }
 
-        .menu {
-            position: absolute;
-            width: 180px;
-            padding: 10px;
-            background-color: rgba(0,0,0,0.9);
-            border: 2px solid rgba(255,255,255,0.2);
-            color: white;
-            z-index: 30;
+        /* MODAL STYLES: Centered and Bigger */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(4px);
             display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 200;
+        }
+
+        .menu {
+            width: 600px;
+            min-height: 350px;
+            padding: 30px;
+            background-color: rgba(10,10,10,0.95);
+            border: 4px solid rgba(251, 191, 36, 0.3);
+            color: white;
+            display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 20px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            position: relative;
         }
 
         .menu h3 {
             margin: 0;
-            font-size: 10px;
+            font-size: 32px;
             color: #fbbf24;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 4px;
+            border-bottom: 2px solid rgba(251, 191, 36, 0.2);
+            padding-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        .menu p {
-            margin: 0;
-            font-size: 8px;
-            color: rgba(255,255,255,0.6);
+        .menu-content {
+            flex: 1;
+            font-size: 18px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.6;
         }
 
         .menu-close {
-            font-size: 8px;
+            font-size: 14px;
             color: #f87171;
             cursor: pointer;
             text-align: center;
-            margin-top: 5px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .menu-close:hover {
+            background: rgba(248, 113, 113, 0.1);
+            color: #ff9999;
         }
 
         #guide {
@@ -199,6 +238,9 @@
         </nav>
 
         <div id="world">
+            <!-- Background inside the world so it scrolls with player -->
+            <div id="background"></div>
+            
             <div id="player">YOU</div>
 
             <div class="npc" id="npc1"></div>
@@ -214,36 +256,16 @@
             <div class="npc-name" id="name4">Kris Karl</div>
             <div class="npc-name" id="name5">Kurt</div>
             <div class="npc-name" id="name6">Will</div>
+        </div>
 
-            <div class="menu" id="menu1">
-                <h3>Antoine</h3>
-                <p>Portfolio empty...</p>
-                <div class="menu-close" onclick="closeMenu(1)">[CLOSE]</div>
-            </div>
-            <div class="menu" id="menu2">
-                <h3>Daniel</h3>
-                <p>Portfolio empty...</p>
-                <div class="menu-close" onclick="closeMenu(2)">[CLOSE]</div>
-            </div>
-            <div class="menu" id="menu3">
-                <h3>Justine</h3>
-                <p>Portfolio empty...</p>
-                <div class="menu-close" onclick="closeMenu(3)">[CLOSE]</div>
-            </div>
-            <div class="menu" id="menu4">
-                <h3>Kris Karl</h3>
-                <p>Portfolio empty...</p>
-                <div class="menu-close" onclick="closeMenu(4)">[CLOSE]</div>
-            </div>
-            <div class="menu" id="menu5">
-                <h3>Kurt</h3>
-                <p>Portfolio empty...</p>
-                <div class="menu-close" onclick="closeMenu(5)">[CLOSE]</div>
-            </div>
-            <div class="menu" id="menu6">
-                <h3>Will</h3>
-                <p>Portfolio empty...</p>
-                <div class="menu-close" onclick="closeMenu(6)">[CLOSE]</div>
+        <!-- Single Modal Structure -->
+        <div id="modal-container" class="modal-overlay" onclick="closeMenu()">
+            <div class="menu" onclick="event.stopPropagation()">
+                <h3 id="modal-title">Name</h3>
+                <div class="menu-content">
+                    <p id="modal-text">Portfolio empty...</p>
+                </div>
+                <div class="menu-close" onclick="closeMenu()">[CLOSE]</div>
             </div>
         </div>
 
@@ -268,12 +290,12 @@
         const NPC_HEIGHT = PLAYER_HEIGHT;
 
         const npcPositions = [
-            {x: 400, y: 50},
-            {x: 650, y: 50},
-            {x: 900, y: 50},
-            {x: 1150, y: 50},
-            {x: 1400, y: 50},
-            {x: 1650, y: 50}
+            {x: 400, y: 50, name: "Antoine"},
+            {x: 650, y: 50, name: "Daniel"},
+            {x: 900, y: 50, name: "Justine"},
+            {x: 1150, y: 50, name: "Kris Karl"},
+            {x: 1400, y: 50, name: "Kurt"},
+            {x: 1650, y: 50, name: "Will"}
         ];
 
         const npcImages = [
@@ -287,8 +309,12 @@
 
         const worldEl = document.getElementById('world');
         const playerEl = document.getElementById('player');
+        const backgroundEl = document.getElementById('background');
+        const modalContainer = document.getElementById('modal-container');
+        const modalTitle = document.getElementById('modal-title');
 
         worldEl.style.width = WORLD_WIDTH + 'px';
+        backgroundEl.style.width = WORLD_WIDTH + 'px';
         playerEl.style.width = PLAYER_WIDTH + 'px';
         playerEl.style.height = PLAYER_HEIGHT + 'px';
 
@@ -307,16 +333,13 @@
             nameEl.style.bottom = (npcPositions[i-1].y + NPC_HEIGHT + 10) + 'px';
 
             npc.addEventListener('click', () => {
-                document.querySelectorAll('.menu').forEach(m => m.style.display = 'none');
-                const menu = document.getElementById('menu' + i);
-                menu.style.left = (npcPositions[i-1].x + NPC_WIDTH + 15) + 'px';
-                menu.style.bottom = npcPositions[i-1].y + 'px';
-                menu.style.display = 'flex';
+                modalTitle.innerText = npcPositions[i-1].name;
+                modalContainer.style.display = 'flex';
             });
         }
 
-        function closeMenu(id) {
-            document.getElementById('menu' + id).style.display = 'none';
+        function closeMenu() {
+            modalContainer.style.display = 'none';
         }
 
         let playerX = 200;
